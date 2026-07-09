@@ -452,9 +452,15 @@
       if (e.target === lightbox) closeLightbox();
     });
 
-    fetch('photos.json')
+    fetch('https://api.github.com/repos/Kai-codin/blahaj/contents/src/photos')
       .then(r => r.json())
-      .then(data => { photos = data; renderGallery(); })
+      .then(files => {
+        photos = files
+          .filter(f => f.name.match(/\.jpe?g$/i))
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map(f => `src/photos/${f.name}`);
+        renderGallery();
+      })
       .catch(() => { photoCount.textContent = 'failed to load photos'; });
   </script>
 </body>
