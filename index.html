@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLÅHAJ — a very good shark</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 44'%3E%3Cpath d='M25 42 C18 30, 6 22, 8 14 C10 7, 16 2, 25 2 C34 2, 40 7, 42 14 C44 22, 32 30, 25 42Z' fill='%234A85A5' stroke='none'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0B1926;
+      --surface: #162A3D;
+      --text: #E8DCC8;
+      --text-muted: #8DA3B8;
+      --shark: #4A85A5;
+      --shark-dark: #1A3A4D;
+      --coral: #E0584A;
+      --belly: #E3D1B8;
+      --radius: 14px;
+      --gutter: 16px;
+    }
+
+    html { font-size: 16px; }
+    body {
+      background: radial-gradient(ellipse at 50% 20%, #102736, var(--bg) 70%);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { color: var(--shark); text-decoration: none; }
+    a:hover { color: var(--belly); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-shark {
+      width: 64px;
+      height: auto;
+      margin-bottom: 20px;
+      color: var(--shark);
+      opacity: 0.8;
+    }
+
+    .hero-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 300;
+      font-size: clamp(3rem, 12vw, 7rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .hero-title span {
+      display: inline-block;
+      position: relative;
+    }
+
+    .hero-title .coral {
+      color: var(--belly);
+      font-weight: 500;
+    }
+
+    .hero-sub {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .hero-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--shark);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: var(--shark);
+      margin: 0 auto 40px;
+      border-radius: 2px;
+      opacity: 0.5;
+    }
+
+    /* ── Gallery ── */
+    .gallery {
+      column-count: 3;
+      column-gap: var(--gutter);
+      padding-bottom: 80px;
+    }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: var(--gutter);
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  box-shadow 0.4s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .gallery-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .gallery-item img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: filter 0.4s ease;
+    }
+
+    .gallery-item:hover img {
+      filter: brightness(0.75);
+    }
+
+    .gallery-item .label {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text);
+      background: rgba(11, 25, 38, 0.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 4px 10px;
+      border-radius: 20px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    .gallery-item:hover .label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 40px 0 60px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .footer a {
+      color: var(--shark);
+    }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: var(--radius);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+      transform: scale(0.92);
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .lightbox.open img {
+      transform: scale(1);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 2rem;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      line-height: 1;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .lightbox-close:hover { opacity: 1; }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 20px 12px;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .lightbox-nav:hover { opacity: 1; }
+    .lightbox-prev { left: 8px; }
+    .lightbox-next { right: 8px; }
+
+    .lightbox-counter {
+      position: absolute;
+      bottom: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .gallery-item {
+        opacity: 1;
+        transform: none;
+      }
+      .gallery-item .label { display: none; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .gallery { column-count: 2; }
+      .hero { padding: 60px 0 40px; }
+    }
+
+    @media (max-width: 500px) {
+      .gallery { column-count: 1; }
+      .hero { padding: 40px 0 30px; }
+      :root { --gutter: 12px; --radius: 10px; }
+    }
+
+    /* ── Focus ── */
+    .gallery-item:focus-visible {
+      outline: 2px solid var(--coral);
+      outline-offset: 4px;
+    }
+
+    .lightbox-close:focus-visible,
+    .lightbox-nav:focus-visible {
+      outline: 2px solid var(--coral);
+      outline-offset: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <svg class="hero-shark" viewBox="0 0 50 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M25 42 C18 30, 6 22, 8 14 C10 7, 16 2, 25 2 C34 2, 40 7, 42 14 C44 22, 32 30, 25 42Z" />
+          <path d="M2 24 Q12 22, 25 24 Q38 27, 48 24" opacity="0.4" />
+        </svg>
+
+        <h1 class="hero-title">
+          <span>BLÅ</span><span class="coral">HAJ</span>
+        </h1>
+        <p class="hero-sub">a very good shark</p>
+        <p class="hero-count" id="photoCount"></p>
+      </section>
+
+      <div class="divider"></div>
+
+      <div class="gallery" id="gallery" role="list" aria-label="BLÅHAJ photos"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p><a href="https://blahaj.me.uk">blahaj.me.uk</a></p>
+    </div>
+  </footer>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Photo viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous photo">&larr;</button>
+    <img src="" alt="" id="lightboxImg">
+    <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next photo">&rarr;</button>
+    <span class="lightbox-counter" id="lightboxCounter"></span>
+  </div>
+
+  <script>
+    const labels = [
+      'adventuring', 'napping', 'exploring', 'keeping watch',
+      'on patrol', 'sunbathing', 'thinking', 'voyaging',
+      'being held', 'judging', 'drifting', 'loafing',
+      'guarding', 'comforting', 'pondering', 'wandering',
+      'resting', 'surveying', 'on duty', 'meditating',
+    ];
+
+    const gallery = document.getElementById('gallery');
+    const photoCount = document.getElementById('photoCount');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+
+    let photos = [];
+    let currentIndex = 0;
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function renderGallery() {
+      photoCount.textContent = `${photos.length} photos`;
+
+      const shuffledLabels = shuffleArray([...labels]);
+
+      photos.forEach((src, i) => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.setAttribute('role', 'listitem');
+        item.setAttribute('tabindex', '0');
+
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.src = src;
+        img.alt = `BLÅHAJ photo ${i + 1}`;
+        img.decoding = 'async';
+
+        const label = document.createElement('span');
+        label.className = 'label';
+        label.textContent = shuffledLabels[i % shuffledLabels.length];
+
+        item.appendChild(img);
+        item.appendChild(label);
+
+        item.addEventListener('click', () => openLightbox(i));
+
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openLightbox(i);
+          }
+        });
+
+        gallery.appendChild(item);
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: '0px 0px 100px 0px' });
+        observer.observe(item);
+      });
+    }
+
+    function openLightbox(index) {
+      currentIndex = index;
+      lightboxImg.src = photos[currentIndex];
+      lightboxImg.alt = `BLÅHAJ photo ${currentIndex + 1}`;
+      lightboxCounter.textContent = `${currentIndex + 1} / ${photos.length}`;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      lightboxClose.focus();
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+      lightboxImg.src = '';
+    }
+
+    function navigateLightbox(direction) {
+      currentIndex = (currentIndex + direction + photos.length) % photos.length;
+      lightboxImg.src = photos[currentIndex];
+      lightboxImg.alt = `BLÅHAJ photo ${currentIndex + 1}`;
+      lightboxCounter.textContent = `${currentIndex + 1} / ${photos.length}`;
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    lightboxPrev.addEventListener('click', () => navigateLightbox(-1));
+    lightboxNext.addEventListener('click', () => navigateLightbox(1));
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navigateLightbox(-1);
+      if (e.key === 'ArrowRight') navigateLightbox(1);
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    fetch('photos.json')
+      .then(r => r.json())
+      .then(data => { photos = data; renderGallery(); })
+      .catch(() => { photoCount.textContent = 'failed to load photos'; });
+  </script>
+</body>
+</html>
